@@ -59,3 +59,44 @@ a:hover {
   height: 10%;
   color: #313131;
 }
+
+/* Language switcher styles */
+.language-switcher {
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.language-switcher label {
+  font-weight: 500;
+  color: #555;
+  margin: 0;
+}
+
+.language-select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  color: #555;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.language-select:hover {
+  border-color: #007bff;
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
