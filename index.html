@@ -64,10 +64,13 @@
         const load = (target) =>
           loadLanguage(target).then((data) => ({ lang: target, data }));
 
-        load(lang)
-          .catch(() => (lang === "en" ? Promise.reject() : load("en")))
+        const loadInOrder = (list) =>
+          load(list[0]).catch(() =>
+            list.length > 1 ? loadInOrder(list.slice(1)) : Promise.reject()
+          );
+
+        loadInOrder(lang === "en" ? ["en"] : [lang, "en"])
           .then(({ lang: loadedLang, data }) => {
-            policies = {};
             if (data.policy) policies[loadedLang] = data.policy;
             if (cache.en?.policy) policies.en = cache.en.policy;
             renderPolicy(data.policy ? loadedLang : "en");

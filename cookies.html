@@ -62,10 +62,13 @@
         const load = (target) =>
           loadLanguage(target).then((data) => ({ lang: target, data }));
 
-        load(lang)
-          .catch(() => (lang === "en" ? Promise.reject() : load("en")))
+        const loadInOrder = (list) =>
+          load(list[0]).catch(() =>
+            list.length > 1 ? loadInOrder(list.slice(1)) : Promise.reject()
+          );
+
+        loadInOrder(lang === "en" ? ["en"] : [lang, "en"])
           .then(({ lang: loadedLang, data }) => {
-            cookieTexts = {};
             if (data.cookies) cookieTexts[loadedLang] = data.cookies;
             if (cache.en?.cookies) cookieTexts.en = cache.en.cookies;
             renderCookies(data.cookies ? loadedLang : "en");
