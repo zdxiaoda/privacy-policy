@@ -59,12 +59,16 @@
         const load = (target) =>
           loadLanguage(target).then((data) => ({ lang: target, data }));
 
-        const loadInOrder = (list) =>
-          load(list[0]).catch(() =>
-            list.length > 1
-              ? loadInOrder(list.slice(1))
-              : Promise.reject(new Error("No language files available"))
-          );
+        const loadInOrder = async (list) => {
+          for (const target of list) {
+            try {
+              return await load(target);
+            } catch (e) {
+              continue;
+            }
+          }
+          throw new Error("No language files available");
+        };
 
         const order = lang === "en" ? ["en"] : [lang, "en"];
 
