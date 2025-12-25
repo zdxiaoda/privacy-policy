@@ -77,7 +77,7 @@
         loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.policy) policies[loadedLang] = data.policy;
-            if (cache.en?.policy) policies.en = cache.en.policy;
+            if (cache.en?.policy && loadedLang !== "en") policies.en = cache.en.policy;
             renderPolicy(data.policy ? loadedLang : "en");
           })
           .catch(() => renderPolicy("en"));

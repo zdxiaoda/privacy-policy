@@ -75,7 +75,7 @@
         loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.cookies) cookieTexts[loadedLang] = data.cookies;
-            if (cache.en?.cookies) cookieTexts.en = cache.en.cookies;
+            if (cache.en?.cookies && loadedLang !== "en") cookieTexts.en = cache.en.cookies;
             renderCookies(data.cookies ? loadedLang : "en");
           })
           .catch(() => renderCookies("en"));
