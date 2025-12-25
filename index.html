@@ -28,6 +28,9 @@
       const contentEl = document.getElementById("policy-content");
       const langButtons = document.querySelectorAll("[data-lang]");
       const availableLangs = ["en", "zh", "ja"];
+      const applyEnFallback = (loadedLang) => {
+        if (cache.en?.policy && loadedLang !== "en") policies.en = cache.en.policy;
+      };
 
       const detectLanguage = () => {
         const stored = localStorage.getItem("policyLang");
@@ -77,7 +80,7 @@
         loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.policy) policies[loadedLang] = data.policy;
-            if (cache.en?.policy && loadedLang !== "en") policies.en = cache.en.policy;
+            applyEnFallback(loadedLang);
             renderPolicy(data.policy ? loadedLang : "en");
           })
           .catch(() => renderPolicy("en"));

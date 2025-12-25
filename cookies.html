@@ -28,6 +28,9 @@
       const contentEl = document.getElementById("cookies-content");
       const langButtons = document.querySelectorAll("[data-lang]");
       const availableLangs = ["en", "zh", "ja"];
+      const applyEnFallback = (loadedLang) => {
+        if (cache.en?.cookies && loadedLang !== "en") cookieTexts.en = cache.en.cookies;
+      };
 
       const detectLanguage = () => {
         const stored = localStorage.getItem("cookiesLang");
@@ -75,7 +78,7 @@
         loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.cookies) cookieTexts[loadedLang] = data.cookies;
-            if (cache.en?.cookies && loadedLang !== "en") cookieTexts.en = cache.en.cookies;
+            applyEnFallback(loadedLang);
             renderCookies(data.cookies ? loadedLang : "en");
           })
           .catch(() => renderCookies("en"));
