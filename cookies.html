@@ -23,7 +23,7 @@
       <p>© 2025 zd小达</p>
     </div>
     <script>
-      let cookieTexts = {};
+      const cookieTexts = {};
       const cache = {};
       const contentEl = document.getElementById("cookies-content");
       const langButtons = document.querySelectorAll("[data-lang]");
@@ -54,9 +54,10 @@
 
       const loadLanguage = (lang) => {
         if (cache[lang]) return Promise.resolve(cache[lang]);
-        return fetch(`./language-${lang}.json`)
+        const path = `./language-${lang}.json`;
+        return fetch(path)
           .then((res) =>
-            res.ok ? res.json() : Promise.reject(new Error(`missing language-${lang}.json`))
+            res.ok ? res.json() : Promise.reject(new Error(`Failed to load ${path}`))
           )
           .then((data) => {
             cache[lang] = data;

@@ -23,7 +23,7 @@
       <p>© 2025 zd小达</p>
     </div>
     <script>
-      let policies = {};
+      const policies = {};
       const cache = {};
       const contentEl = document.getElementById("policy-content");
       const langButtons = document.querySelectorAll("[data-lang]");
@@ -58,7 +58,7 @@
         const path = `./language-${lang}.json`;
         return fetch(path)
           .then((res) =>
-            res.ok ? res.json() : Promise.reject(new Error(`missing ${path}`))
+            res.ok ? res.json() : Promise.reject(new Error(`Failed to load ${path}`))
           )
           .then((data) => {
             cache[lang] = data;
