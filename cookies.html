@@ -27,10 +27,11 @@
       const cache = {};
       const contentEl = document.getElementById("cookies-content");
       const langButtons = document.querySelectorAll("[data-lang]");
+      const availableLangs = ["en", "zh", "ja"];
 
       const detectLanguage = () => {
         const stored = localStorage.getItem("cookiesLang");
-        if (stored) return stored;
+        if (stored && availableLangs.includes(stored)) return stored;
         const browserLang = (navigator.language || "").toLowerCase();
         if (browserLang.startsWith("zh")) return "zh";
         if (browserLang.startsWith("ja")) return "ja";
@@ -51,7 +52,9 @@
       const loadLanguage = (lang) => {
         if (cache[lang]) return Promise.resolve(cache[lang]);
         return fetch(`./language-${lang}.json`)
-          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((res) =>
+            res.ok ? res.json() : Promise.reject(new Error(`missing language-${lang}.json`))
+          )
           .then((data) => {
             cache[lang] = data;
             return data;
@@ -67,7 +70,9 @@
             list.length > 1 ? loadInOrder(list.slice(1)) : Promise.reject()
           );
 
-        loadInOrder(lang === "en" ? ["en"] : [lang, "en"])
+        const order = lang === "en" ? ["en"] : [lang, "en"];
+
+        loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.cookies) cookieTexts[loadedLang] = data.cookies;
             if (cache.en?.cookies) cookieTexts.en = cache.en.cookies;

@@ -27,10 +27,11 @@
       const cache = {};
       const contentEl = document.getElementById("policy-content");
       const langButtons = document.querySelectorAll("[data-lang]");
+      const availableLangs = ["en", "zh", "ja"];
 
       const detectLanguage = () => {
         const stored = localStorage.getItem("policyLang");
-        if (stored) return stored;
+        if (stored && availableLangs.includes(stored)) return stored;
 
         const browserLang = (navigator.language || "").toLowerCase();
         if (browserLang.startsWith("zh")) return "zh";
@@ -53,7 +54,9 @@
         if (cache[lang]) return Promise.resolve(cache[lang]);
         const path = `./language-${lang}.json`;
         return fetch(path)
-          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((res) =>
+            res.ok ? res.json() : Promise.reject(new Error(`missing ${path}`))
+          )
           .then((data) => {
             cache[lang] = data;
             return data;
@@ -69,7 +72,9 @@
             list.length > 1 ? loadInOrder(list.slice(1)) : Promise.reject()
           );
 
-        loadInOrder(lang === "en" ? ["en"] : [lang, "en"])
+        const order = lang === "en" ? ["en"] : [lang, "en"];
+
+        loadInOrder(order)
           .then(({ lang: loadedLang, data }) => {
             if (data.policy) policies[loadedLang] = data.policy;
             if (cache.en?.policy) policies.en = cache.en.policy;
