@@ -22,25 +22,14 @@
       </div>
       <p>© 2025 zd小达</p>
     </div>
+    <script src="./lang-utils.js"></script>
     <script>
       const policies = {};
       const cache = {};
       const contentEl = document.getElementById("policy-content");
       const langButtons = document.querySelectorAll("[data-lang]");
-      const availableLangs = ["en", "zh", "ja"];
       const applyEnFallback = (loadedLang) => {
         if (cache.en?.policy && loadedLang !== "en") policies.en = cache.en.policy;
-      };
-
-      const detectLanguage = () => {
-        const stored = localStorage.getItem("policyLang");
-        if (stored && availableLangs.includes(stored)) return stored;
-
-        const browserLang = (navigator.language || "").toLowerCase();
-        if (browserLang.startsWith("zh")) return "zh";
-        if (browserLang.startsWith("ja")) return "ja";
-        if (browserLang.startsWith("en")) return "en";
-        return "en";
       };
 
       const renderPolicy = (lang) => {
@@ -72,7 +61,9 @@
 
         const loadInOrder = (list) =>
           load(list[0]).catch(() =>
-            list.length > 1 ? loadInOrder(list.slice(1)) : Promise.reject()
+            list.length > 1
+              ? loadInOrder(list.slice(1))
+              : Promise.reject(new Error("No language files available"))
           );
 
         const order = lang === "en" ? ["en"] : [lang, "en"];
@@ -86,7 +77,7 @@
           .catch(() => renderPolicy("en"));
       };
 
-      applyLanguage(detectLanguage());
+      applyLanguage(detectLanguage("policyLang"));
 
       langButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
