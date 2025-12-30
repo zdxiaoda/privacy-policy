@@ -2,98 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Cookie Policy | zd小达's Websites</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      href="https://cdn.xiaoda.fun/image/avatar/zdxiaoda.webp" />
+    <link rel="icon" href="https://cdn.xiaoda.fun/image/avatar/zdxiaoda.webp" />
     <link rel="stylesheet" href="./style.css" />
+    <!-- 字体 -->
+    <link
+      href="https://cdn.xiaoda.fun/static/fonts/KingHwaOldSong/result.css"
+      rel="stylesheet" />
   </head>
 
-  <body>
+  <body
+    data-i18n-section="cookies"
+    data-storage-key="cookiesLang"
+    data-content-id="cookies-content">
     <div id="cookies-content"></div>
     <div class="footer">
       <hr color="#d9d9d9" />
       <div class="language-switch">
-        <span>Language:</span>
-        <button data-lang="en">English</button>
-        <button data-lang="zh">中文</button>
-        <button data-lang="ja">日本語</button>
+        <span data-i18n="ui.languageLabel"></span>
+        <button data-lang="en" data-i18n="ui.languageNames.en"></button>
+        <button data-lang="zh" data-i18n="ui.languageNames.zh"></button>
+        <button data-lang="ja" data-i18n="ui.languageNames.ja"></button>
       </div>
-      <p>© 2025 zd小达</p>
+      <p class="copyright" data-i18n="ui.copyright"></p>
     </div>
-    <script src="./lang-utils.js"></script>
-    <script>
-      const cookieTexts = {};
-      const cache = {};
-      const contentEl = document.getElementById("cookies-content");
-      const langButtons = document.querySelectorAll("[data-lang]");
-      const applyEnFallback = (loadedLang) => {
-        if (cache.en?.cookies && loadedLang !== "en") cookieTexts.en = cache.en.cookies;
-      };
-
-      const renderCookies = (lang) => {
-        const copy = cookieTexts[lang] || cookieTexts.en || {};
-        document.documentElement.lang = copy.langAttr || "en";
-        if (copy.title) document.title = copy.title;
-        contentEl.innerHTML = copy.content || "";
-        langButtons.forEach((btn) => {
-          btn.classList.toggle("lang-active", btn.dataset.lang === lang);
-        });
-      };
-
-      const loadLanguage = (lang) => {
-        if (cache[lang]) return Promise.resolve(cache[lang]);
-        const path = `./language/language-${lang}.json`;
-        return fetch(path)
-          .then((res) =>
-            res.ok ? res.json() : Promise.reject(new Error(`Failed to load ${path}`))
-          )
-          .then((data) => {
-            cache[lang] = data;
-            return data;
-          });
-      };
-
-      const applyLanguage = (lang) => {
-        const load = (target) =>
-          loadLanguage(target).then((data) => ({ lang: target, data }));
-
-        const loadInOrder = async (list) => {
-          for (const target of list) {
-            try {
-              return await load(target);
-            } catch (e) {
-              continue;
-            }
-          }
-          throw new Error("No language files available");
-        };
-
-        const order = lang === "en" ? ["en"] : [lang, "en"];
-
-        loadInOrder(order)
-          .then(({ lang: loadedLang, data }) => {
-            if (data.cookies) cookieTexts[loadedLang] = data.cookies;
-            applyEnFallback(loadedLang);
-            renderCookies(data.cookies ? loadedLang : "en");
-          })
-          .catch(() => renderCookies("en"));
-      };
-
-      applyLanguage(detectLanguage("cookiesLang"));
-
-      langButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const targetLang = btn.dataset.lang;
-          localStorage.setItem("cookiesLang", targetLang);
-          applyLanguage(targetLang);
-        });
-      });
-    </script>
+    <script src="./app.js"></script>
   </body>
-  <!--字体-->
-  <link
-    href="https://cdn.xiaoda.fun/static/fonts/KingHwaOldSong/result.css"
-    rel="stylesheet" />
 </html>

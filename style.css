@@ -69,21 +69,29 @@ a:hover {
 }
 
 .language-switch button {
-  border: 1px solid #d9d9d9;
-  background-color: #f7f7f7;
-  color: #313131;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #555;
+  padding: 0;
+  border-radius: 0;
   cursor: pointer;
   font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 .language-switch button:hover {
-  background-color: #eaeaea;
+  color: #0056b3;
+  text-decoration: underline;
 }
 
 .language-switch button.lang-active {
-  background-color: #313131;
-  color: #ffffff;
-  border-color: #313131;
+  color: #313131;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.copyright {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
 }

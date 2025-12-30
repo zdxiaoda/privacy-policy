@@ -2,98 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Privacy Policy | zd小达's Websites</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      href="https://cdn.xiaoda.fun/image/avatar/zdxiaoda.webp" />
+    <link rel="icon" href="https://cdn.xiaoda.fun/image/avatar/zdxiaoda.webp" />
     <link rel="stylesheet" href="./style.css" />
+    <!-- 字体 -->
+    <link
+      href="https://cdn.xiaoda.fun/static/fonts/KingHwaOldSong/result.css"
+      rel="stylesheet" />
   </head>
 
-  <body>
+  <body
+    data-i18n-section="policy"
+    data-storage-key="policyLang"
+    data-content-id="policy-content">
     <div id="policy-content"></div>
     <div class="footer">
       <hr color="#d9d9d9" />
       <div class="language-switch">
-        <span>Language:</span>
-        <button data-lang="en">English</button>
-        <button data-lang="zh">中文</button>
-        <button data-lang="ja">日本語</button>
+        <span data-i18n="ui.languageLabel"></span>
+        <button data-lang="en" data-i18n="ui.languageNames.en"></button>
+        <button data-lang="zh" data-i18n="ui.languageNames.zh"></button>
+        <button data-lang="ja" data-i18n="ui.languageNames.ja"></button>
       </div>
-      <p>© 2025 zd小达</p>
+      <p class="copyright" data-i18n="ui.copyright"></p>
     </div>
-    <script src="./lang-utils.js"></script>
-    <script>
-      const policies = {};
-      const cache = {};
-      const contentEl = document.getElementById("policy-content");
-      const langButtons = document.querySelectorAll("[data-lang]");
-      const applyEnFallback = (loadedLang) => {
-        if (cache.en?.policy && loadedLang !== "en") policies.en = cache.en.policy;
-      };
-
-      const renderPolicy = (lang) => {
-        const policy = policies[lang] || policies.en || {};
-        document.documentElement.lang = policy.langAttr || "en";
-        if (policy.title) document.title = policy.title;
-        contentEl.innerHTML = policy.content || "";
-        langButtons.forEach((btn) => {
-          btn.classList.toggle("lang-active", btn.dataset.lang === lang);
-        });
-      };
-
-      const loadLanguage = (lang) => {
-        if (cache[lang]) return Promise.resolve(cache[lang]);
-        const path = `./language/language-${lang}.json`;
-        return fetch(path)
-          .then((res) =>
-            res.ok ? res.json() : Promise.reject(new Error(`Failed to load ${path}`))
-          )
-          .then((data) => {
-            cache[lang] = data;
-            return data;
-          });
-      };
-
-      const applyLanguage = (lang) => {
-        const load = (target) =>
-          loadLanguage(target).then((data) => ({ lang: target, data }));
-
-        const loadInOrder = async (list) => {
-          for (const target of list) {
-            try {
-              return await load(target);
-            } catch (e) {
-              continue;
-            }
-          }
-          throw new Error("No language files available");
-        };
-
-        const order = lang === "en" ? ["en"] : [lang, "en"];
-
-        loadInOrder(order)
-          .then(({ lang: loadedLang, data }) => {
-            if (data.policy) policies[loadedLang] = data.policy;
-            applyEnFallback(loadedLang);
-            renderPolicy(data.policy ? loadedLang : "en");
-          })
-          .catch(() => renderPolicy("en"));
-      };
-
-      applyLanguage(detectLanguage("policyLang"));
-
-      langButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const targetLang = btn.dataset.lang;
-          localStorage.setItem("policyLang", targetLang);
-          applyLanguage(targetLang);
-        });
-      });
-    </script>
+    <script src="./app.js"></script>
   </body>
-  <!--字体-->
-  <link
-    href="https://cdn.xiaoda.fun/static/fonts/KingHwaOldSong/result.css"
-    rel="stylesheet" />
 </html>
