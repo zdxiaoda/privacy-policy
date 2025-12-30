@@ -15,7 +15,7 @@
     <div class="footer">
       <hr color="#d9d9d9" />
       <div class="language-switch">
-        <span>Language / 语言 / 言語:</span>
+        <span>Language:</span>
         <button data-lang="en">English</button>
         <button data-lang="zh">中文</button>
         <button data-lang="ja">日本語</button>
@@ -44,7 +44,7 @@
 
       const loadLanguage = (lang) => {
         if (cache[lang]) return Promise.resolve(cache[lang]);
-        const path = `./language-${lang}.json`;
+        const path = `./language/language-${lang}.json`;
         return fetch(path)
           .then((res) =>
             res.ok ? res.json() : Promise.reject(new Error(`Failed to load ${path}`))
