@@ -6,9 +6,10 @@
  * - fills UI text via [data-i18n="dot.path"]
  *
  * HTML contract (on <body>):
- * - data-i18n-section: "policy" | "cookies" (must exist in language JSON)
+ * - data-i18n-section: section key in language JSON (e.g. "policy" | "cookies" | "melotag")
  * - data-storage-key: localStorage key to persist language
  * - data-content-id: id of the container to inject HTML content into
+ * - data-language-base: optional base path for language files (default "./language/")
  */
 (function () {
   const DEFAULT_LANG = "en";
@@ -34,7 +35,8 @@
 
   const loadLanguage = (lang) => {
     if (cache[lang]) return Promise.resolve(cache[lang]);
-    const path = `./language/language-${lang}.json`;
+    const base = document.body.dataset.languageBase || "./language/";
+    const path = `${base}language-${lang}.json`;
     return fetch(path)
       .then((res) =>
         res.ok

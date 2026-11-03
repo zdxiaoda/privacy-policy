@@ -44,6 +44,15 @@ ul {
   padding-left: 1.5rem;
 }
 
+code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+  background: #f2f2f2;
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  word-break: break-all;
+}
+
 /* Styles for links */
 a {
   color: #007bff;
